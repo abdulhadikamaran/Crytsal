@@ -1,0 +1,45 @@
+{
+    "manifest_version": 3,
+    "name": "Crystal: AI Corrector",
+    "version": "1.0.0",
+    "icons": {
+        "16": "batman-logo-png_seeklogo-17070.png",
+        "48": "batman-logo-png_seeklogo-17070.png",
+        "128": "batman-logo-png_seeklogo-17070.png"
+    },
+    "action": {
+        "default_popup": "index.html"
+    },
+    "background": {
+        "service_worker": "background/index.ts",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "js": [
+                "content/index.ts"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage",
+        "notifications",
+        "alarms"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "batman-logo-png_seeklogo-17070.png",
+                "public/batman-logo-png_seeklogo-17070.png"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}

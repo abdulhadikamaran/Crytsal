@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  --mac-text: #1d1d1f;
+  --mac-bg-start: #fae498;
+  --mac-bg-end: #f4be5e;
+}
+
+html {
+  background-color: transparent;
+}
+
+body {
+  margin: 0;
+  width: 380px;
+  height: 500px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+
+  /* Reset Theme */
+  background-color: transparent;
+  color: #1a1a1a;
+  overflow: hidden;
+  cursor: default;
+
+  /* Text antialiasing for thinner, cleaner text */
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes subtleShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
