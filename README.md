@@ -1,120 +1,87 @@
-# ✨ Crystal AI - Text Correction Extension
+# ✦ Crystal AI — The Invisible Editor
 
-A Chrome extension that uses AI to instantly fix typos, grammar, and spelling in any text field. Powered by Groq's ultra-fast Llama models.
+**Stop fixing typos. Let AI do it in under 500ms.**  
+Crystal is an open-source, completely free Chrome extension that uses Groq's lightning-fast AI to instantly correct your writing anywhere on the web.
 
-![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green?logo=googlechrome)
-![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+🌐 **[Visit the Website](https://abdulhadikamaran.github.io/Crystal/)** (or wherever you host the landing page)  
+⚡ **[Download the Latest Release](https://github.com/abdulhadikamaran/Crytsal/releases/tag/v1.0.0)**
+
+---
+
+## 🤔 Why Crystal over Grammarly?
+
+Grammarly is great, but it has problems: it puts distracting red squiggly lines everywhere, slows down your browser, requires an expensive monthly subscription for "advanced" AI rewriting, and sends all your writing to their proprietary servers.
+
+**Crystal takes a completely different approach:**
+
+1. **Zero Distractions (No UI):** No popups, no squiggly lines, no floating bubbles. Crystal stays invisible until the exact moment you need it.
+2. **One-Press Magic:** Don't click through suggestions one by one. Just press `Shift + A` and your entire paragraph is instantly fixed.
+3. **100% Free & Open Source:** It uses the exact same level of AI as premium subscriptions (Llama 3.1 70B), but because you plug in your own free Groq API key, you never pay a subscription fee.
+4. **Absolute Privacy:** Crystal has no database. No telemetry. Your API keys are stored locally in your browser, and your text goes straight to Groq via an encrypted connection.
+5. **Insanely Fast:** Powered by Groq's specialized AI hardware, corrections return in an average of ~500ms.
+
+---
 
 ## 🚀 Features
 
-- **Instant Correction**: Press `Shift+A` on any text input to fix it
-- **Smart Model Selection**: Auto-routes between fast 8B and powerful 70B models
-- **5 Worker Slots**: Use up to 5 API keys for parallel processing
-- **Rate Limit Handling**: Automatic key rotation when rate limited
-- **Offline Detection**: Handles network issues gracefully
-- **Debug Log**: See all requests with timing and status
-- **Undo Support**: Press `Shift+Q` to undo the last fix
+- **Instant Correction:** Press `Shift+A` on any text input, textarea, or content-editable div (like Notion or Google Docs).
+- **Instant Undo:** Not happy? Press `Shift+Q` to immediately revert to your original text.
+- **Smart Key Rotation:** Enter up to 5 free Groq API keys. Crystal automatically balances the load and rotates them if one gets rate-limited.
+- **Context-Aware:** Uses a fast 8B model for short typos, and a massive 70B model for complex, technical paragraphs.
+- **Selection Mode:** Highlight just a single messy sentence, and Crystal will only fix the highlighted text.
 
-## 📦 Installation
+---
 
-### Option 1: Quick Install (Pre-built)
-1. Download the latest release ZIP
-2. Unzip the file
-3. Open Chrome → `chrome://extensions`
-4. Enable **Developer mode** (top-right toggle)
-5. Click **Load unpacked**
-6. Select the unzipped folder
+## 📦 Installation (Takes 60 Seconds)
 
-### Option 2: Build from Source
+Because Crystal gives you direct, unmonitored access to AI models, it is currently available via GitHub releases.
+
+1. Go to the [Releases page](https://github.com/abdulhadikamaran/Crytsal/releases/tag/v1.0.0) and download `crystal-v1.0.0.zip`.
+2. Unzip the file on your computer.
+3. Open Chrome and go to `chrome://extensions`.
+4. Turn on **Developer mode** (toggle in the top-right corner).
+5. Click **Load unpacked** and select the folder you just unzipped.
+6. Click the Crystal icon in your Chrome toolbar, paste in a free key from [console.groq.com/keys](https://console.groq.com/keys), and you're done!
+
+---
+
+## 🛠️ Development
+
+Want to build on top of Crystal?
+
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/crystal-ai-extension.git
-cd crystal-ai-extension
+git clone https://github.com/abdulhadikamaran/Crytsal.git
+cd Crytsal
 
 # Install dependencies
 npm install
 
-# Build the extension
-npm run build
-
-# Load the 'dist' folder in Chrome
-```
-
-## 🔑 Setup API Key
-
-1. Click the Crystal AI extension icon
-2. Either:
-   - **Use the free shared key** shown in the popup (just copy & paste)
-   - **Get your own free key** at [console.groq.com/keys](https://console.groq.com/keys)
-3. Click any worker slot (the gray boxes)
-4. Paste your API key and click Save
-5. The slot turns green when ready!
-
-## 🎮 Usage
-
-| Shortcut | Action |
-|----------|--------|
-| `Shift + A` | Fix text in current input |
-| `Shift + Q` | Undo last fix |
-
-### Supported Fields
-- Text inputs (`<input type="text">`)
-- Text areas (`<textarea>`)
-- ContentEditable elements (like Google Docs, Notion)
-
-## 🛠️ Development
-
-```bash
-# Run development server
+# Run the development server (auto-reloads extension)
 npm run dev
 
-# Build for production
+# Build the final production version
 npm run build
-
-# Run tests
-npm test
 ```
 
-## 📁 Project Structure
-
-```
-├── background/        # Service worker (API handling)
-├── content/          # Content script (keyboard shortcuts)
-├── components/       # React popup UI
-├── services/
-│   └── worker-core/  # API client, key management, caching
-├── dist/             # Built extension (load this in Chrome)
-└── manifest.json     # Extension manifest
-```
-
-## ⚙️ Tech Stack
-
-- **Frontend**: React 19, TypeScript, TailwindCSS
-- **Build**: Vite + CRXJS
-- **AI**: Groq API (Llama 3.1 8B & 70B)
-- **Storage**: Chrome Local Storage
-
-## 🔒 Privacy
-
-- API keys are stored **locally** in your browser only
-- Text is sent to Groq for processing (not stored)
-- No analytics or tracking
-- No data is shared between users
-
-## 📄 License
-
-MIT License - feel free to use, modify, and distribute!
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit changes: `git commit -m 'Add feature'`
-4. Push to branch: `git push origin feature-name`
-5. Open a Pull Request
+### 📁 Architecture
+- `background/` - The Service Worker that handles API calls, circuit breaking, and load balancing.
+- `content/` - Vanilla JS content script for high-performance DOM manipulation and keyboard listeners.
+- `components/` - React 19 UI for the extension popup and settings.
+- `services/worker-core/` - The brain: API client, key management, and caching layer.
 
 ---
 
-Made with ❤️ for better writing
+## 🔒 Privacy Guarantee
+
+- **No Servers:** We do not host any backend servers.
+- **Local Storage:** API keys are saved strictly to `chrome.storage.local`.
+- **Direct Connection:** When you press `Shift+A`, the request goes directly from your local browser to Groq's API endpoint. 
+- **No Tracking:** Zero analytics. Read the code yourself to verify!
+
+---
+
+## 📄 License
+MIT License - feel free to use, fork, modify, and distribute!
+
+Made with ❤️ for better writing.

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crystal AI — Fix Your Writing Instantly</title>
+  <meta name="description" content="Crystal AI is a free Chrome extension that fixes your typos, grammar, and spelling in any text field using lightning-fast AI. Just press Shift+A." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-crystal">✦</span>
+        <span class="logo-text">Crystal</span>
+      </div>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#privacy">Privacy</a>
+      </div>
+      <a href="https://github.com/abdulhadikamaran/Crytsal/releases/tag/v1.0.0" target="_blank" rel="noopener" class="btn-nav" id="nav-cta">
+        Download — Free
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-glow"></div>
+
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Free Chrome Extension — No Account Needed</span>
+      </div>
+
+      <h1 class="hero-title">
+        Stop fixing typos.<br />
+        Let <span class="accent-word">AI</span> do it.
+      </h1>
+
+      <p class="hero-subtitle">
+        Crystal lives quietly in your browser. Press <kbd>Shift</kbd> + <kbd>A</kbd> on any text field and watch it instantly fix every typo, grammar mistake, and spelling error in under a second.
+      </p>
+
+      <div class="hero-actions">
+        <a href="https://github.com/abdulhadikamaran/Crytsal/releases/tag/v1.0.0" target="_blank" rel="noopener" class="btn-primary" id="main-cta">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill="currentColor"/></svg>
+          Download from GitHub — Free
+        </a>
+        <a href="#how" class="btn-secondary">
+          How it works
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" fill="currentColor"/></svg>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">~500ms</span>
+          <span class="stat-label">Average fix time</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">5 Keys</span>
+          <span class="stat-label">Parallel workers</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Private & local</span>
+        </div>
+      </div>
+
+      <!-- DEMO WINDOW -->
+      <div class="demo-window" id="demo">
+        <div class="demo-chrome-bar">
+          <div class="chrome-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="chrome-url">mail.google.com — Compose</div>
+        </div>
+        <div class="demo-body">
+          <div class="demo-label">You type this:</div>
+          <div class="demo-textbox" id="demo-before">
+            <span class="demo-cursor"></span>
+            <span class="demo-text" id="demo-typing"></span>
+          </div>
+          <div class="demo-shortcut" id="demo-shortcut">
+            <kbd>Shift</kbd>&nbsp;+&nbsp;<kbd>A</kbd>
+          </div>
+          <div class="demo-label" id="demo-after-label" style="opacity:0">Crystal fixes it:</div>
+          <div class="demo-textbox demo-after" id="demo-after" style="opacity:0">
+            <span class="demo-text green" id="demo-result"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="section-inner">
+      <div class="section-tag">How it works</div>
+      <h2 class="section-title">Three steps.<br/>That's it.</h2>
+      <p class="section-sub">No account. No subscription. No learning curve.</p>
+
+      <div class="steps">
+        <div class="step card" data-aos>
+          <div class="step-num">01</div>
+          <div class="step-icon">📦</div>
+          <h3>Install the extension</h3>
+          <p>Download from GitHub and load it into Chrome in under 60 seconds. No Chrome Web Store needed.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step card" data-aos>
+          <div class="step-num">02</div>
+          <div class="step-icon">🔑</div>
+          <h3>Add your free API key</h3>
+          <p>Get a free Groq API key at <strong>console.groq.com</strong>. Paste it into the Crystal popup. Done in 30 seconds.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step card" data-aos>
+          <div class="step-num">03</div>
+          <div class="step-icon">⚡</div>
+          <h3>Press Shift + A anywhere</h3>
+          <p>Works in Gmail, Twitter, Notion, Google Docs — any text field on any website. Press Shift+Q to undo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US VS OTHERS -->
+  <section class="section section-dark" id="why-us">
+    <div class="section-inner">
+      <div class="section-tag">The Crystal Difference</div>
+      <h2 class="section-title">Why not just use Grammarly?</h2>
+      <p class="section-sub">Other tools are built to sell subscriptions. Crystal is built for speed and focus.</p>
+
+      <div class="features-grid">
+        <div class="card feature-card" data-aos>
+          <div class="feature-icon">🚫</div>
+          <h3>Zero Distractions</h3>
+          <p>Grammarly puts floating logos and red squiggly lines on everything you write. Crystal is 100% invisible. It only wakes up when you press <kbd>Shift+A</kbd>.</p>
+        </div>
+        <div class="card feature-card" data-aos>
+          <div class="feature-icon">💸</div>
+          <h3>No $12/mo Subscriptions</h3>
+          <p>Other tools lock "Advanced AI Rewriting" behind expensive paywalls. Crystal gives you access to ultra-powerful AI models for exactly $0.</p>
+        </div>
+        <div class="card feature-card" data-aos>
+          <div class="feature-icon">🏃‍♂️</div>
+          <h3>One-Press Flow</h3>
+          <p>Don't click through suggestions one-by-one. Write messy, brain-dump your thoughts, and press one button to fix the entire paragraph instantly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="section-inner">
+      <div class="section-tag">Features</div>
+      <h2 class="section-title">Built for speed.<br/>Designed to disappear.</h2>
+      <p class="section-sub">Crystal stays invisible until the moment you need it.</p>
+
+      <div class="features-grid">
+        <div class="feature-card card" data-aos>
+          <div class="feature-icon">⚡</div>
+          <h3>Lightning Fast</h3>
+          <p>Powered by Groq's ultra-fast Llama models. Most corrections finish in under 500ms — faster than you can look away from the screen.</p>
+        </div>
+        <div class="feature-card card" data-aos>
+          <div class="feature-icon">🔄</div>
+          <h3>Smart Key Rotation</h3>
+          <p>Add up to 5 API keys. If one hits its rate limit, Crystal silently switches to the next one. Zero interruptions, ever.</p>
+        </div>
+        <div class="feature-card card" data-aos>
+          <div class="feature-icon">🧠</div>
+          <h3>Context-Aware AI</h3>
+          <p>Two intelligent modes: a fast conservative model for simple fixes, and a powerful 70B model that understands technical jargon and complex sentences.</p>
+        </div>
+        <div class="feature-card card" data-aos>
+          <div class="feature-icon">↩️</div>
+          <h3>One-Press Undo</h3>
+          <p>Not happy with the result? Press <kbd>Shift</kbd> + <kbd>Q</kbd> to instantly revert to your original text exactly as you wrote it.</p>
+        </div>
+        <div class="feature-card card" data-aos>
+          <div class="feature-icon">🌐</div>
+          <h3>Works Everywhere</h3>
+          <p>Text inputs, textareas, Google Docs, Notion, Twitter, Gmail — if you can type in it, Crystal can fix it.</p>
+        </div>
+        <div class="feature-card card" data-aos>
+          <div class="feature-icon">✂️</div>
+          <h3>Fix Just a Selection</h3>
+          <p>Highlight one sentence or a paragraph and Crystal fixes only that part. Surgical precision when you don't want to touch the rest.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEFORE / AFTER -->
+  <section class="section" id="examples">
+    <div class="section-inner">
+      <div class="section-tag">Real examples</div>
+      <h2 class="section-title">See the difference.</h2>
+      <p class="section-sub">From minor typos to completely garbled text — Crystal handles it all.</p>
+
+      <div class="examples">
+        <div class="example card" data-aos>
+          <div class="example-before">
+            <span class="ex-tag before-tag">Before</span>
+            <p>"i wnat to scheduel a meeing for tomorow can u send teh calander inviet to eveyone?"</p>
+          </div>
+          <div class="example-arrow">→</div>
+          <div class="example-after">
+            <span class="ex-tag after-tag">After</span>
+            <p>"I want to schedule a meeting for tomorrow. Can you send the calendar invite to everyone?"</p>
+          </div>
+        </div>
+        <div class="example card" data-aos>
+          <div class="example-before">
+            <span class="ex-tag before-tag">Before</span>
+            <p>"teh api key aer expried an teh extnestion si nto wokring cna u chekc teh code?"</p>
+          </div>
+          <div class="example-arrow">→</div>
+          <div class="example-after">
+            <span class="ex-tag after-tag">After</span>
+            <p>"The API keys are expired and the extension is not working. Can you check the code?"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section class="section section-dark" id="privacy">
+    <div class="section-inner privacy-inner">
+      <div class="privacy-text" data-aos>
+        <div class="section-tag">Privacy First</div>
+        <h2 class="section-title">Your words.<br/>Never ours.</h2>
+        <p class="section-sub">No server. No account. No data ever leaves your browser to us.</p>
+        <ul class="privacy-list">
+          <li><span class="check">✓</span> Your API keys are stored only in your browser</li>
+          <li><span class="check">✓</span> Text is sent directly to Groq — not to us</li>
+          <li><span class="check">✓</span> Zero analytics, zero tracking, zero telemetry</li>
+          <li><span class="check">✓</span> Fully open source — read every line on GitHub</li>
+        </ul>
+      </div>
+      <div class="privacy-card card" data-aos>
+        <div class="privacy-flow">
+          <div class="flow-node you">You</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node crystal">Crystal</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node groq">Groq AI</div>
+        </div>
+        <p class="flow-note">Direct connection. No middleman. No data stored.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-section" id="install">
+    <div class="cta-glow"></div>
+    <div class="section-inner cta-inner">
+      <h2 class="cta-title">Ready to write better?</h2>
+      <p class="cta-sub">Free. Private. Instant. No account required.</p>
+      <a href="https://github.com/abdulhadikamaran/Crytsal/releases/tag/v1.0.0" target="_blank" rel="noopener" class="btn-primary btn-large" id="footer-cta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill="currentColor"/></svg>
+        Download from GitHub — Free
+      </a>
+      <p class="cta-note">Works on Chrome, Brave, and Edge · v1.0.0</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="nav-logo">
+        <span class="logo-crystal">✦</span>
+        <span class="logo-text">Crystal</span>
+      </div>
+      <p class="footer-copy">Made with ❤️ for better writing</p>
+      <div class="footer-links">
+        <a href="https://github.com/abdulhadikamaran/Crytsal" target="_blank" rel="noopener">GitHub</a>
+        <a href="#privacy">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
