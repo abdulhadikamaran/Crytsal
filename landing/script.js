@@ -1,5 +1,5 @@
 /* ============================================
-   CRYSTAL AI LANDING — SCRIPT
+   CRYSTAL AI LANDING — SCRIPT (VOLT THEME)
    ============================================ */
 
 const nav = document.getElementById('nav');
@@ -31,9 +31,8 @@ const demoAfter       = document.getElementById('demo-after');
 const demoAfterLabel  = document.getElementById('demo-after-label');
 const demoBeforeBox   = document.getElementById('demo-before');
 
-// Editorial Demo Text
-const DEMO_BEFORE = 'the system architecture are highly scalable but it have a few bottleneck that needs resolving.';
-const DEMO_AFTER  = 'The system architecture is highly scalable, but it has a few bottlenecks that need resolving.';
+const DEMO_BEFORE = 'i rly nned to fnish thsi proejct tody. cna u hlp me wth it plss??';
+const DEMO_AFTER  = 'I really need to finish this project today. Can you help me with it, please?';
 
 let demoRunning = false;
 
@@ -54,18 +53,18 @@ async function runDemo() {
   // Type messy text
   for (const char of DEMO_BEFORE) {
     demoTypingEl.textContent += char;
-    await sleep(20 + Math.random() * 15);
+    await sleep(30 + Math.random() * 20);
   }
 
   await sleep(400);
 
   // Show shortcut hint
   demoShortcut.classList.add('show');
-  await sleep(300);
+  await sleep(400);
 
   // Processing state
   demoBeforeBox.classList.add('active');
-  await sleep(500);
+  await sleep(400);
 
   // Show corrected result
   demoAfterLabel.style.opacity = '1';
@@ -73,7 +72,7 @@ async function runDemo() {
 
   for (const char of DEMO_AFTER) {
     demoResultEl.textContent += char;
-    await sleep(15);
+    await sleep(20);
   }
 
   await sleep(4000);
@@ -93,25 +92,12 @@ const heroObserver = new IntersectionObserver((entries) => {
 const heroSection = document.getElementById('hero');
 if (heroSection) heroObserver.observe(heroSection);
 
-// ── SMOOTH SCROLL ─────────────────────────────
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-  link.addEventListener('click', (e) => {
-    const href = link.getAttribute('href');
-    if (href === '#') return;
-    const target = document.querySelector(href);
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
-
-// ── SUBTLE PARALLAX ON HERO VOID ─────────────
-const heroVoid = document.querySelector('.hero-void');
-if (heroVoid) {
+// ── SUBTLE PARALLAX ON HERO GLOW ─────────────
+const heroGlow = document.querySelector('.hero-bg-glow');
+if (heroGlow) {
   document.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 30;
-    const y = (e.clientY / window.innerHeight - 0.5) * 15;
-    heroVoid.style.transform = `translateX(${x}px) translateY(${y}px)`;
+    const x = (e.clientX / window.innerWidth - 0.5) * 40;
+    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+    heroGlow.style.transform = `translateX(calc(-50% + ${x}px)) translateY(${y}px)`;
   }, { passive: true });
 }
