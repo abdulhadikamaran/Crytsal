@@ -242,89 +242,27 @@ body {
   border-color: var(--border-hover);
 }
 
-/* ── DEMO WINDOW ─────────────────────────── */
+/* ── DEMO WINDOW (CHATGPT MOCKUP) ────────── */
 .demo-section { padding: 0 40px 120px; }
 .section-inner { max-width: 1200px; margin: 0 auto; }
 
-.demo-window {
-  background: rgba(10, 10, 12, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  overflow: hidden;
-  max-width: 860px;
-  margin: -40px auto 0; /* Pull up slightly over hero */
-  box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.03) inset;
-}
-
-.demo-chrome-bar {
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border);
-  padding: 16px;
+.chatgpt-mockup {
+  position: relative;
+  max-width: 800px;
+  margin: -40px auto 0;
+  z-index: 10;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
 }
-
-.chrome-dots { display: flex; gap: 8px; }
-.dot { width: 12px; height: 12px; border-radius: 50%; }
-.dot.red { background: #ff5f56; }
-.dot.yellow { background: #ffbd2e; }
-.dot.green { background: #27c93f; }
-
-.chrome-url {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-muted);
-  background: #000;
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-}
-
-.demo-body { padding: 40px; text-align: left; }
-
-.demo-state-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-dim);
-  margin-bottom: 12px;
-  transition: opacity 0.3s;
-}
-
-.demo-textbox {
-  font-size: 20px;
-  color: var(--text-dim);
-  line-height: 1.6;
-  min-height: 80px;
-  margin-bottom: 24px;
-}
-
-.demo-textbox.active { color: var(--text-pure); }
-
-.refined-text {
-  color: var(--text-pure);
-  font-weight: 500;
-}
-
-.demo-cursor {
-  display: inline-block;
-  width: 2px;
-  height: 22px;
-  background: var(--text-pure);
-  vertical-align: middle;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
 .demo-action-area {
+  height: 60px; /* Space for the floating tooltips */
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 24px;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 16px;
+  width: 100%;
 }
 
 .demo-shortcut {
@@ -341,11 +279,13 @@ body {
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.4s var(--ease-spring);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .demo-shortcut.show { opacity: 1; transform: translateY(0); }
+.demo-shortcut kbd { font-weight: 700; color: var(--text-pure); }
+.shortcut-desc { color: var(--text-pure); opacity: 0.8; font-size: 12px; font-family: var(--font-sans); }
 
-.demo-shortcut kbd { font-weight: 700; }
 .shortcut-pulse {
   width: 8px; height: 8px;
   background: var(--volt);
@@ -353,11 +293,123 @@ body {
   animation: pulse 2s infinite;
 }
 
+.shortcut-pulse.pulse-red {
+  background: #ff453a;
+  animation: pulse-red 2s infinite;
+}
+
 @keyframes pulse {
   0% { box-shadow: 0 0 0 0 rgba(204, 255, 0, 0.4); }
   70% { box-shadow: 0 0 0 6px rgba(204, 255, 0, 0); }
   100% { box-shadow: 0 0 0 0 rgba(204, 255, 0, 0); }
 }
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(255, 69, 58, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(255, 69, 58, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 69, 58, 0); }
+}
+
+/* The actual ChatGPT input bar */
+.chat-input-wrapper {
+  width: 100%;
+}
+
+.chat-input-box {
+  background: #2f2f2f; /* ChatGPT exact color */
+  border-radius: 24px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  transition: outline 0.2s ease;
+  min-height: 52px;
+}
+
+.chat-input-box.active {
+  outline: 2px solid var(--volt);
+}
+
+.chat-btn-attach {
+  background: transparent;
+  border: none;
+  color: #ececec;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.chat-textarea {
+  flex: 1;
+  font-size: 16px;
+  color: #ececec;
+  font-family: system-ui, -apple-system, sans-serif;
+  padding: 6px 0;
+  line-height: 1.5;
+  position: relative;
+  word-wrap: break-word;
+}
+
+.demo-placeholder {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  color: #8e8ea0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.demo-text {
+  white-space: pre-wrap;
+}
+
+.demo-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 18px;
+  background: #ececec;
+  vertical-align: middle;
+  animation: blink 1s infinite;
+  margin-left: 2px;
+  opacity: 0;
+}
+
+.demo-cursor.show {
+  opacity: 1;
+}
+
+.chat-btn-send {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 2px;
+  opacity: 0.5; /* Default state when empty */
+  transition: opacity 0.2s;
+}
+
+.chat-btn-send.ready {
+  opacity: 1;
+}
+
+.chat-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #8e8ea0;
+  margin-top: 12px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
 
 /* ── BENTO GRID ──────────────────────────── */
 .bento-features { padding: 80px 40px; }

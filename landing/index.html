@@ -67,38 +67,44 @@
     </div>
   </section>
 
-  <!-- DEMO SECTION -->
+  <!-- DEMO SECTION (ChatGPT Mockup) -->
   <section class="section demo-section" id="demo-section">
     <div class="section-inner">
-      <div class="demo-window" id="demo">
-        <div class="demo-chrome-bar">
-          <div class="chrome-dots">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
+      
+      <div class="chatgpt-mockup" id="demo">
+        <!-- Floating Shortcut Hint -->
+        <div class="demo-action-area">
+          <div class="demo-shortcut" id="demo-shortcut-a">
+            <span class="shortcut-pulse"></span>
+            <kbd>Shift</kbd> + <kbd>A</kbd> <span class="shortcut-desc">to fix</span>
           </div>
-          <div class="chrome-url">gmail.com/compose</div>
+          <div class="demo-shortcut shortcut-undo" id="demo-shortcut-q" style="display:none;">
+            <span class="shortcut-pulse pulse-red"></span>
+            <kbd>Shift</kbd> + <kbd>Q</kbd> <span class="shortcut-desc">to undo</span>
+          </div>
         </div>
-        <div class="demo-body">
-          <div class="demo-state-label">Drafting...</div>
-          <div class="demo-textbox" id="demo-before">
-            <span class="demo-cursor"></span>
-            <span class="demo-text" id="demo-typing"></span>
-          </div>
-          
-          <div class="demo-action-area">
-            <div class="demo-shortcut" id="demo-shortcut">
-              <span class="shortcut-pulse"></span>
-              <kbd>Shift</kbd> + <kbd>A</kbd>
-            </div>
-          </div>
 
-          <div class="demo-state-label" id="demo-after-label" style="opacity:0; color: var(--volt);">Fixed by Crystal.</div>
-          <div class="demo-textbox demo-after" id="demo-after" style="opacity:0">
-            <span class="demo-text refined-text" id="demo-result"></span>
+        <!-- ChatGPT Input Area -->
+        <div class="chat-input-wrapper">
+          <div class="chat-input-box" id="demo-before">
+            <button class="chat-btn-attach">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+            </button>
+            
+            <div class="chat-textarea">
+              <span class="demo-placeholder" id="demo-placeholder">Message ChatGPT</span>
+              <span class="demo-cursor" id="demo-cursor"></span>
+              <span class="demo-text" id="demo-typing"></span>
+            </div>
+
+            <button class="chat-btn-send">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+            </button>
           </div>
+          <div class="chat-footer">ChatGPT can make mistakes. Check important info.</div>
         </div>
       </div>
+
     </div>
   </section>
 
