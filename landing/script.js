@@ -2,13 +2,11 @@
    CRYSTAL AI LANDING — SCRIPT
    ============================================ */
 
-// ── NAV SCROLL EFFECT ────────────────────────
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 20);
 }, { passive: true });
 
-// ── AOS (ANIMATE ON SCROLL) ──────────────────
 const aosElements = document.querySelectorAll('[data-aos]');
 const aosObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -33,8 +31,9 @@ const demoAfter       = document.getElementById('demo-after');
 const demoAfterLabel  = document.getElementById('demo-after-label');
 const demoBeforeBox   = document.getElementById('demo-before');
 
-const DEMO_BEFORE = 'i wnat to scheduel a meeing for tomorow cna u sned teh inviet to eveyone on teh tem?';
-const DEMO_AFTER  = 'I want to schedule a meeting for tomorrow. Can you send the invite to everyone on the team?';
+// Editorial Demo Text
+const DEMO_BEFORE = 'the system architecture are highly scalable but it have a few bottleneck that needs resolving.';
+const DEMO_AFTER  = 'The system architecture is highly scalable, but it has a few bottlenecks that need resolving.';
 
 let demoRunning = false;
 
@@ -50,9 +49,9 @@ async function runDemo() {
   demoShortcut.classList.remove('show');
   demoAfter.style.opacity = '0';
   demoAfterLabel.style.opacity = '0';
-  demoBeforeBox.classList.remove('active', 'success');
+  demoBeforeBox.classList.remove('active');
 
-  // 1. Type messy text (faster for better UX)
+  // Type messy text
   for (const char of DEMO_BEFORE) {
     demoTypingEl.textContent += char;
     await sleep(20 + Math.random() * 15);
@@ -60,33 +59,30 @@ async function runDemo() {
 
   await sleep(400);
 
-  // 2. Show shortcut hint
+  // Show shortcut hint
   demoShortcut.classList.add('show');
   await sleep(300);
 
-  // 3. Processing state
+  // Processing state
   demoBeforeBox.classList.add('active');
-  await sleep(600);
+  await sleep(500);
 
-  // 4. Show corrected result
+  // Show corrected result
   demoAfterLabel.style.opacity = '1';
   demoAfter.style.opacity = '1';
-  demoBeforeBox.classList.remove('active');
-  demoBeforeBox.classList.add('success');
 
   for (const char of DEMO_AFTER) {
     demoResultEl.textContent += char;
-    await sleep(22);
+    await sleep(15);
   }
 
-  await sleep(3200);
+  await sleep(4000);
 
   demoRunning = false;
   await sleep(800);
   runDemo();
 }
 
-// Only start once the hero is in view
 const heroObserver = new IntersectionObserver((entries) => {
   if (entries[0].isIntersecting) {
     runDemo();
@@ -110,12 +106,12 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
-// ── SUBTLE MOUSE PARALLAX ON HERO GLOW ───────
-const heroGlow = document.querySelector('.hero-glow');
-if (heroGlow) {
+// ── SUBTLE PARALLAX ON HERO VOID ─────────────
+const heroVoid = document.querySelector('.hero-void');
+if (heroVoid) {
   document.addEventListener('mousemove', (e) => {
     const x = (e.clientX / window.innerWidth - 0.5) * 30;
     const y = (e.clientY / window.innerHeight - 0.5) * 15;
-    heroGlow.style.transform = `translateX(calc(-50% + ${x}px)) translateY(calc(-50% + ${y}px))`;
+    heroVoid.style.transform = `translateX(${x}px) translateY(${y}px)`;
   }, { passive: true });
 }

@@ -34,7 +34,6 @@ export const CustomController: React.FC = () => {
     const [keyStatuses, setKeyStatuses] = useState<KeyStatus[]>([]);
     const [hasApiKeys, setHasApiKeys] = useState<boolean | null>(null);
 
-    // Key editing state
     const [editingKeyIndex, setEditingKeyIndex] = useState<number | null>(null);
     const [newKeyValue, setNewKeyValue] = useState('');
     const [isValidating, setIsValidating] = useState(false);
@@ -52,11 +51,7 @@ export const CustomController: React.FC = () => {
         });
 
         chrome.runtime.sendMessage({ type: 'GET_REQUEST_LOG' }, (response) => {
-            console.log('[Popup] Got response:', response);
-            if (response?.log) {
-                console.log('[Popup] Log entries:', response.log.length);
-                setRequestLog(response.log);
-            }
+            if (response?.log) setRequestLog(response.log);
             if (response?.keyStatuses) setKeyStatuses(response.keyStatuses);
             if (typeof response?.hasApiKeys === 'boolean') setHasApiKeys(response.hasApiKeys);
         });
@@ -67,7 +62,6 @@ export const CustomController: React.FC = () => {
 
         const handleMessage = (message: { type: string; log?: RequestLogEntry[]; keyStatuses?: KeyStatus[] }) => {
             if (message.type === 'LOG_UPDATE') {
-                console.log('[Popup] LOG_UPDATE received:', message.log?.length);
                 if (message.log) setRequestLog(message.log);
                 if (message.keyStatuses) setKeyStatuses(message.keyStatuses);
             }
@@ -75,7 +69,6 @@ export const CustomController: React.FC = () => {
 
         chrome.runtime.onMessage.addListener(handleMessage);
 
-        // Poll for updates
         const interval = setInterval(() => {
             chrome.runtime.sendMessage({ type: 'GET_REQUEST_LOG' }, (response) => {
                 if (response?.log) setRequestLog(response.log);
@@ -90,7 +83,6 @@ export const CustomController: React.FC = () => {
         };
     }, [loadData]);
 
-    // Auto-scroll when log updates
     useEffect(() => {
         if (logContainerRef.current && debugMode) {
             logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
@@ -121,20 +113,17 @@ export const CustomController: React.FC = () => {
         setRequestLog([]);
     };
 
-    // Handle clicking on a worker slot
     const handleWorkerClick = (keyIndex: number) => {
         setEditingKeyIndex(keyIndex);
         setNewKeyValue('');
         setValidationError(null);
     };
 
-    // Save new API key with validation
     const saveNewKey = async () => {
         if (editingKeyIndex === null) return;
-
         const trimmedKey = newKeyValue.trim();
         if (!trimmedKey.startsWith('gsk_') || trimmedKey.length < 20) {
-            setValidationError('Invalid format. Keys start with "gsk_" and are longer.');
+            setValidationError('Invalid format. Must start with "gsk_"');
             return;
         }
 
@@ -146,7 +135,7 @@ export const CustomController: React.FC = () => {
             key: trimmedKey
         }, (result) => {
             if (!result?.valid) {
-                setValidationError(result?.error || 'Key validation failed');
+                setValidationError(result?.error || 'Validation failed');
                 setIsValidating(false);
                 return;
             }
@@ -167,7 +156,6 @@ export const CustomController: React.FC = () => {
         });
     };
 
-    // Remove a key
     const removeKey = (keyIndex: number, e: React.MouseEvent) => {
         e.stopPropagation();
         chrome.runtime.sendMessage({
@@ -182,347 +170,221 @@ export const CustomController: React.FC = () => {
         });
     };
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'ready': return 'bg-green-500';
-            case 'cooldown': return 'bg-yellow-500';
-            case 'dead': return 'bg-red-600';
-            case 'empty': return 'bg-gray-300 border-2 border-dashed border-gray-400';
-            default: return 'bg-gray-400';
-        }
-    };
-
-    const getStatusText = (status: string) => {
-        switch (status) {
-            case 'ready': return 'Ready';
-            case 'cooldown': return 'Cooldown';
-            case 'dead': return 'Invalid';
-            case 'empty': return 'Empty';
-            default: return status;
-        }
-    };
-
-    const getResultColor = (result: string) => {
-        switch (result) {
-            case 'success': return 'text-green-500';
-            case 'cached': return 'text-blue-500';
-            case 'no_change': return 'text-gray-500';
-            case 'timeout': return 'text-orange-500';
-            case 'error': return 'text-red-500';
-            default: return 'text-gray-500';
-        }
-    };
-
-    const getResultIcon = (result: string) => {
-        switch (result) {
-            case 'success': return '✓';
-            case 'cached': return '⚡';
-            case 'no_change': return '=';
-            case 'timeout': return '⏱';
-            case 'error': return '✗';
-            default: return '?';
-        }
-    };
-
     const activeKeyCount = keyStatuses.filter(k => k.status !== 'empty').length;
     const isNoKeyState = !hasApiKeys && activeKeyCount === 0;
 
-    // Loading state
     if (hasApiKeys === null) {
         return (
-            <div className="flex flex-col w-full h-full p-3 bg-gray-100/50">
-                <div className="w-full h-full bg-white rounded-2xl shadow-soft overflow-hidden border border-gray-100 flex items-center justify-center">
-                    <div className="text-gray-400 text-sm">Loading...</div>
-                </div>
+            <div className="flex w-full h-full min-h-[500px] bg-[#000000] items-center justify-center">
+                <div className="w-6 h-6 rounded-full border-2 border-white/20 border-t-white animate-spin"></div>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col w-full h-full p-3 bg-gray-100/50">
-            <div className="w-full h-full bg-white rounded-2xl shadow-soft overflow-hidden border border-gray-100 flex flex-col transition-all duration-300">
-                <header className="flex items-center justify-between px-4 py-3 border-b border-gray-50">
-                    <h1 className="text-gray-900 text-base font-bold tracking-tight">Crystal AI</h1>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                            type="checkbox"
-                            className="sr-only peer"
-                            checked={power}
-                            onChange={togglePower}
-                        />
-                        <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#66cc88]"></div>
-                    </label>
-                </header>
+        <div className="flex flex-col w-full h-full min-h-[500px] bg-[#0A0A0A] text-white font-sans overflow-hidden">
+            
+            {/* Header */}
+            <header className="flex items-center justify-between px-6 py-5 border-b border-white/[0.05]">
+                <div>
+                    <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        Crystal
+                        {!power && <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-white/10 text-white/50 tracking-normal">Offline</span>}
+                    </h1>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" checked={power} onChange={togglePower} />
+                    <div className="w-[44px] h-[24px] bg-white/10 rounded-full peer peer-checked:bg-white transition-all duration-300">
+                        <div className={`absolute top-[2px] left-[2px] w-[20px] h-[20px] rounded-full transition-all duration-300 shadow-sm ${power ? 'translate-x-[20px] bg-black' : 'bg-white/50'}`}></div>
+                    </div>
+                </label>
+            </header>
 
-                <main className="flex-1 flex flex-col px-4 py-2 overflow-y-auto">
-                    <div className={`flex flex-col gap-3 transition-opacity duration-300 ${!power ? 'opacity-50 pointer-events-none' : ''}`}>
+            <main className={`flex-1 flex flex-col px-6 py-5 overflow-y-auto custom-scrollbar transition-opacity duration-300 ${!power ? 'opacity-40 pointer-events-none grayscale' : ''}`}>
+                
+                {/* Workers Section */}
+                <div className="mb-8">
+                    <div className="flex justify-between items-center mb-3">
+                        <h2 className="text-sm font-semibold text-white/60 tracking-wide">Workers</h2>
+                        <span className="text-sm font-medium text-white/40">{activeKeyCount} / 5</span>
+                    </div>
 
-                        {/* 5 Worker Slots */}
-                        <div>
-                            <div className="flex justify-between items-center mb-2">
-                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Workers ({activeKeyCount}/5)</span>
-                                {isNoKeyState && (
-                                    <a
-                                        href="https://console.groq.com/keys"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-[9px] text-blue-500 hover:text-blue-600 font-medium flex items-center gap-1"
-                                    >
-                                        Get API Key ↗
-                                    </a>
-                                )}
-                            </div>
+                    <div className="grid grid-cols-5 gap-2">
+                        {Array.from({ length: MAX_WORKERS }).map((_, i) => {
+                            const status = keyStatuses[i] || { status: 'empty', keyIndex: i, successCount: 0, errorCount: 0 };
+                            const isEmpty = status.status === 'empty';
+                            const isDead = status.status === 'dead';
 
-                            {/* Worker Grid */}
-                            <div className="grid grid-cols-5 gap-2">
-                                {Array.from({ length: MAX_WORKERS }).map((_, i) => {
-                                    const status = keyStatuses[i] || { status: 'empty', keyIndex: i, successCount: 0, errorCount: 0 };
-                                    const isEmpty = status.status === 'empty';
-                                    const isDead = status.status === 'dead';
-
-                                    return (
-                                        <div
-                                            key={i}
-                                            onClick={() => handleWorkerClick(i)}
-                                            className={`relative cursor-pointer transition-all hover:scale-105 ${isEmpty || isDead ? 'opacity-100' : ''}`}
-                                            title={`Worker ${i + 1}: ${getStatusText(status.status)}${status.maskedKey ? `\nKey: ...${status.maskedKey}` : ''}\nSuccess: ${status.successCount} | Errors: ${status.errorCount}${status.lastError ? `\nError: ${status.lastError}` : ''}`}
-                                        >
-                                            <div className={`h-8 rounded-lg flex items-center justify-center ${getStatusColor(status.status)} transition-all ${isDead ? 'animate-pulse' : ''}`}>
-                                                {isEmpty ? (
-                                                    <span className="text-gray-400 text-lg">+</span>
-                                                ) : (
-                                                    <span className="text-white text-[10px] font-bold">{i + 1}</span>
-                                                )}
-                                            </div>
-                                            {/* Masked key display */}
-                                            {status.maskedKey && (
-                                                <span className="absolute -bottom-3.5 left-0 right-0 text-[7px] text-gray-400 text-center truncate">
-                                                    ...{status.maskedKey}
-                                                </span>
-                                            )}
-                                            {/* Remove button for non-empty slots */}
-                                            {!isEmpty && (
-                                                <button
-                                                    onClick={(e) => removeKey(i, e)}
-                                                    className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white text-[8px] opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center shadow-sm"
-                                                >
-                                                    ✕
-                                                </button>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-
-                            {/* Legend */}
-                            <div className="flex justify-center gap-3 mt-4 text-[8px] text-gray-400">
-                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500"></span>Ready</span>
-                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-yellow-500"></span>Cooldown</span>
-                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-600"></span>Invalid</span>
-                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-gray-300 border border-gray-400"></span>Empty</span>
-                            </div>
-
-                            {/* No API keys warning */}
-                            {isNoKeyState && (
-                                <div className="mt-3 space-y-2">
-                                    <div className="p-2 bg-blue-50 rounded-lg border border-blue-100">
-                                        <p className="text-[10px] text-blue-700 text-center">
-                                            Click any worker slot to add your Groq API key
-                                        </p>
-                                    </div>
-
-                                    {/* Get Free API Key */}
-                                    <div className="p-2 bg-green-50 rounded-lg border border-green-200">
-                                        <p className="text-[10px] text-green-700 text-center font-medium mb-1">
-                                            🎁 Get a FREE API key in 30 seconds:
-                                        </p>
-                                        <a
-                                            href="https://console.groq.com/keys"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="block w-full py-1.5 bg-green-500 hover:bg-green-600 text-white text-[10px] font-medium rounded text-center transition-colors"
-                                        >
-                                            Get Free Key at Groq Console →
-                                        </a>
-                                        <p className="text-[8px] text-green-600 text-center mt-1">
-                                            Sign up, create a key, then paste it in a worker slot
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Key Editor Modal */}
-                        {editingKeyIndex !== null && (
-                            <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-white text-xs font-semibold">
-                                        Worker {editingKeyIndex + 1} - {keyStatuses[editingKeyIndex]?.status === 'empty' ? 'Add Key' : 'Replace Key'}
-                                    </span>
-                                    <button
-                                        onClick={() => setEditingKeyIndex(null)}
-                                        className="text-gray-400 hover:text-white text-xs"
-                                    >
-                                        ✕
-                                    </button>
-                                </div>
-                                <p className="text-[9px] text-gray-400 mb-2">
-                                    Get your free API key from <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">console.groq.com/keys</a>
-                                </p>
-                                <input
-                                    type="password"
-                                    placeholder="gsk_xxxxxxxxxxxxx..."
-                                    value={newKeyValue}
-                                    onChange={(e) => setNewKeyValue(e.target.value)}
-                                    className="w-full px-2 py-2 text-xs bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-                                    disabled={isValidating}
-                                    autoFocus
-                                />
-                                {validationError && (
-                                    <p className="text-[9px] text-red-400 mt-1">{validationError}</p>
-                                )}
-                                <div className="flex gap-2 mt-2">
-                                    <button
-                                        onClick={saveNewKey}
-                                        disabled={isValidating || !newKeyValue.trim()}
-                                        className={`flex-1 py-2 text-xs font-semibold rounded transition-colors flex items-center justify-center gap-1 ${isValidating || !newKeyValue.trim()
-                                            ? 'bg-gray-600 text-gray-400 cursor-wait'
-                                            : 'bg-green-600 hover:bg-green-700 text-white'
-                                            }`}
-                                    >
-                                        {isValidating ? (
-                                            <>
-                                                <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                                </svg>
-                                                Validating...
-                                            </>
-                                        ) : (
-                                            'Save Key'
-                                        )}
-                                    </button>
-                                    <button
-                                        onClick={() => setEditingKeyIndex(null)}
-                                        disabled={isValidating}
-                                        className="px-4 py-2 text-xs font-semibold bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Model Selector */}
-                        {!isNoKeyState && (
-                            <div>
-                                <div className="flex justify-between items-baseline mb-1">
-                                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Model</span>
-                                    <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${power ? 'text-[#66cc88] bg-[#66cc88]/10' : 'text-gray-400 bg-gray-100'}`}>
-                                        {power ? 'Active' : 'Offline'}
-                                    </span>
-                                </div>
-
-                                <div className="flex p-1 bg-[#f8f9fa] rounded-xl border border-gray-100">
-                                    {(['8b', 'auto', '70b'] as const).map((m) => (
-                                        <label key={m} className="flex-1 relative cursor-pointer">
-                                            <input
-                                                className="sr-only peer"
-                                                name="model"
-                                                type="radio"
-                                                value={m}
-                                                checked={model === m}
-                                                onChange={() => selectModel(m)}
-                                            />
-                                            <div className={`w-full py-2 text-center text-xs font-semibold text-gray-500 rounded-lg transition-all peer-checked:shadow-sm ${m === 'auto'
-                                                ? 'peer-checked:bg-[#66cc88] peer-checked:text-white'
-                                                : 'peer-checked:bg-white peer-checked:text-gray-900'
-                                                }`}>
-                                                {m === 'auto' ? 'Auto' : m}
-                                            </div>
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Debug Mode Toggle */}
-                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                            <span className="text-[10px] text-gray-400">Debug Log</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="sr-only peer"
-                                    checked={debugMode}
-                                    onChange={toggleDebugMode}
-                                />
-                                <div className="w-7 h-3.5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:start-[1px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all peer-checked:bg-blue-500"></div>
-                            </label>
-                        </div>
-
-                        {/* Debug Log View - Compact */}
-                        {debugMode && (
-                            <div
-                                ref={logContainerRef}
-                                className="p-2 bg-gray-900 rounded-lg overflow-hidden"
-                                style={{ maxHeight: '120px' }}
-                            >
-                                <div className="flex justify-between items-center mb-1">
-                                    <span className="text-gray-400 text-[10px] font-medium">Log ({requestLog.length})</span>
-                                    <button
-                                        onClick={clearLog}
-                                        className="text-red-400 hover:text-red-300 text-[9px]"
-                                    >
-                                        Clear
-                                    </button>
-                                </div>
-
-                                <div className="overflow-y-auto" style={{ maxHeight: '90px' }}>
-                                    {requestLog.length === 0 ? (
-                                        <div className="text-gray-500 text-[9px] py-1 text-center">
-                                            No requests yet. Press Shift+A to fix text.
-                                        </div>
+                            return (
+                                <div
+                                    key={i}
+                                    onClick={() => handleWorkerClick(i)}
+                                    className={`group relative h-14 flex flex-col items-center justify-center rounded-xl cursor-pointer transition-all duration-200 border
+                                        ${isEmpty ? 'bg-transparent border-white/10 hover:border-white/30 border-dashed' : 'bg-[#1C1C1E] border-white/5 hover:border-white/20 shadow-sm'}
+                                    `}
+                                >
+                                    {isEmpty ? (
+                                        <span className="text-lg font-light text-white/30">+</span>
                                     ) : (
-                                        <div className="space-y-0.5 font-mono text-[9px]">
-                                            {requestLog.slice(-20).map((log, i) => (
-                                                <div key={log.id || i} className="flex items-center gap-1 py-0.5">
-                                                    <span className={`${getResultColor(log.result)}`}>
-                                                        {getResultIcon(log.result)}
-                                                    </span>
-                                                    <span className={`font-semibold ${getResultColor(log.result)}`}>
-                                                        {log.result.substring(0, 3).toUpperCase()}
-                                                    </span>
-                                                    <span className="text-gray-500">{log.latencyMs}ms</span>
-                                                    {log.model && (
-                                                        <span className="text-blue-400">{log.model}</span>
-                                                    )}
-                                                    {log.keyUsed !== undefined && (
-                                                        <span className="text-gray-600">W{log.keyUsed + 1}</span>
-                                                    )}
-                                                    {log.error && (
-                                                        <span className="text-red-400 truncate flex-1">{log.error}</span>
-                                                    )}
-                                                    <span className="text-gray-700 ml-auto">
-                                                        {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
+                                        <>
+                                            {/* Status Dot */}
+                                            <div className={`w-2 h-2 rounded-full mb-1 ${
+                                                status.status === 'ready' ? 'bg-[#34C759]' :
+                                                status.status === 'cooldown' ? 'bg-[#FF9F0A]' :
+                                                status.status === 'dead' ? 'bg-[#FF453A] animate-pulse' : 'bg-transparent'
+                                            }`}></div>
+                                            
+                                            {/* Key Label */}
+                                            <span className="text-xs font-semibold text-white/80">0{i + 1}</span>
+                                        </>
+                                    )}
+
+                                    {/* Delete Button (Hover) */}
+                                    {!isEmpty && (
+                                        <button
+                                            onClick={(e) => removeKey(i, e)}
+                                            className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#FF453A] text-white rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-all shadow-md z-10"
+                                        >
+                                            ✕
+                                        </button>
                                     )}
                                 </div>
+                            );
+                        })}
+                    </div>
+                    
+                    {isNoKeyState && (
+                        <div className="mt-4 p-4 rounded-xl bg-[#1C1C1E] border border-white/10">
+                            <p className="text-sm text-white/70 mb-3 leading-relaxed">
+                                Crystal requires a Groq API key to operate securely on your device.
+                            </p>
+                            <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" className="block w-full py-2.5 bg-white text-black text-sm font-semibold rounded-lg text-center hover:bg-gray-200 transition-colors">
+                                Get Free Key
+                            </a>
+                        </div>
+                    )}
+                </div>
+
+                {/* Model Selector Section */}
+                {!isNoKeyState && (
+                    <div className="mb-8">
+                        <div className="flex justify-between items-center mb-3">
+                            <h2 className="text-sm font-semibold text-white/60 tracking-wide">AI Engine</h2>
+                        </div>
+                        <div className="flex p-1 bg-[#1C1C1E] rounded-xl border border-white/5">
+                            {(['8b', 'auto', '70b'] as const).map((m) => (
+                                <label key={m} className="flex-1 relative cursor-pointer z-10">
+                                    <input className="sr-only peer" name="model" type="radio" value={m} checked={model === m} onChange={() => selectModel(m)} />
+                                    <div className={`w-full py-2.5 text-center text-sm font-semibold rounded-lg transition-all duration-200 ${
+                                        model === m 
+                                        ? 'bg-[#3A3A3C] text-white shadow-sm' 
+                                        : 'text-white/40 hover:text-white/70'
+                                    }`}>
+                                        {m === 'auto' ? 'Auto' : m.toUpperCase()}
+                                    </div>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <div className="flex-1"></div>
+
+                {/* Advanced / Developer */}
+                <div className="border-t border-white/10 pt-4 pb-2">
+                    <div className="flex items-center justify-between cursor-pointer group" onClick={toggleDebugMode}>
+                        <span className="text-sm font-medium text-white/60 group-hover:text-white transition-colors">Developer Console</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-white/40">{debugMode ? 'Active' : 'Hidden'}</span>
+                            <svg className={`w-4 h-4 text-white/40 transition-transform ${debugMode ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Developer Log */}
+                {debugMode && (
+                    <div ref={logContainerRef} className="mt-2 p-3 bg-[#121214] border border-white/10 rounded-xl overflow-y-auto custom-scrollbar" style={{ height: '140px' }}>
+                        <div className="flex justify-between items-center mb-3 sticky top-0 bg-[#121214] pb-2 border-b border-white/5">
+                            <span className="text-xs font-mono font-medium text-white/50">System Log ({requestLog.length})</span>
+                            <button onClick={clearLog} className="text-xs font-medium text-[#FF453A] hover:text-[#FF6961]">Clear</button>
+                        </div>
+                        {requestLog.length === 0 ? (
+                            <div className="text-xs font-mono text-white/30 py-2">No activity recorded.</div>
+                        ) : (
+                            <div className="space-y-2 font-mono text-xs">
+                                {requestLog.slice(-20).map((log, i) => (
+                                    <div key={log.id || i} className="flex flex-wrap items-center gap-2">
+                                        <span className={log.result === 'success' ? 'text-[#34C759]' : log.result === 'error' ? 'text-[#FF453A]' : 'text-white/40'}>
+                                            [{log.result.substring(0, 3).toUpperCase()}]
+                                        </span>
+                                        <span className="text-white/40">{log.latencyMs}ms</span>
+                                        {log.model && <span className="text-[#0A84FF]">{log.model.replace('llama-3.1-', '')}</span>}
+                                        {log.keyUsed !== undefined && <span className="text-white/70">W0{log.keyUsed + 1}</span>}
+                                        {log.error && <span className="text-[#FF453A] truncate flex-1">{log.error}</span>}
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>
-                </main>
+                )}
+            </main>
 
-                {/* Privacy Footer */}
-                <footer className="px-4 py-1.5 border-t border-gray-100 flex items-center justify-center gap-1">
-                    <svg className="w-2.5 h-2.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                    </svg>
-                    <span className="text-[8px] text-gray-400">Your keys are stored locally only. Text sent to Groq.</span>
-                </footer>
-            </div>
+            {/* Key Entry Modal */}
+            {editingKeyIndex !== null && (
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-6">
+                    <div className="w-full bg-[#1C1C1E] border border-white/10 rounded-2xl p-6 shadow-2xl">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-base font-semibold text-white">
+                                {keyStatuses[editingKeyIndex]?.status === 'empty' ? 'Add API Key' : 'Replace API Key'}
+                            </h3>
+                        </div>
+                        <p className="text-sm text-white/50 mb-4">
+                            Paste your free Groq API key for Slot 0{editingKeyIndex + 1}.
+                        </p>
+                        <input
+                            type="password"
+                            placeholder="gsk_..."
+                            value={newKeyValue}
+                            onChange={(e) => setNewKeyValue(e.target.value)}
+                            className="w-full px-4 py-3 bg-[#0A0A0A] border border-white/10 rounded-xl text-base font-mono text-white placeholder-white/20 focus:outline-none focus:border-white/40 transition-colors mb-2"
+                            disabled={isValidating}
+                            autoFocus
+                        />
+                        <div className="h-5 mb-4">
+                            {validationError && <p className="text-sm text-[#FF453A]">{validationError}</p>}
+                        </div>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setEditingKeyIndex(null)}
+                                disabled={isValidating}
+                                className="flex-1 py-3 text-sm font-semibold bg-[#2C2C2E] hover:bg-[#3A3A3C] text-white rounded-xl transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={saveNewKey}
+                                disabled={isValidating || !newKeyValue.trim()}
+                                className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all ${
+                                    isValidating || !newKeyValue.trim()
+                                        ? 'bg-white/10 text-white/30 cursor-not-allowed'
+                                        : 'bg-white text-black hover:bg-gray-200'
+                                }`}
+                            >
+                                {isValidating ? 'Validating...' : 'Save'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <style dangerouslySetInnerHTML={{__html: `
+                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+            `}} />
         </div>
     );
 };
