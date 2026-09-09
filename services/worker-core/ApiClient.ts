@@ -222,7 +222,7 @@ async function executeCorrection(
             model: tier === '8b' ? MODEL_8B : MODEL_70B,
             messages: compiledMessages,
             temperature: tier === '8b' ? 0 : 0.1,
-            max_tokens: tier === '8b' ? 128 : 1024
+            max_tokens: tier === '8b' ? 1024 : 2048
         };
 
         // Use fetchWithRetry instead of fetchWithTimeout

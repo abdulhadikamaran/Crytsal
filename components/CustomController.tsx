@@ -280,7 +280,7 @@ export const CustomController: React.FC = () => {
                                         ? 'bg-[#3A3A3C] text-white shadow-sm' 
                                         : 'text-white/40 hover:text-white/70'
                                     }`}>
-                                        {m === 'auto' ? 'Auto' : m.toUpperCase()}
+                                        {m === 'auto' ? 'Auto' : m === '8b' ? '20B' : '120B'}
                                     </div>
                                 </label>
                             ))}
@@ -320,7 +320,13 @@ export const CustomController: React.FC = () => {
                                             [{log.result.substring(0, 3).toUpperCase()}]
                                         </span>
                                         <span className="text-white/40">{log.latencyMs}ms</span>
-                                        {log.model && <span className="text-[#0A84FF]">{log.model.replace('llama-3.1-', '')}</span>}
+                                        {log.model && (
+                                            <span className="text-[#0A84FF]">
+                                                {log.model === '8b' || log.model.toLowerCase().includes('20b') ? '20B' :
+                                                 log.model === '70b' || log.model.toLowerCase().includes('120b') ? '120B' :
+                                                 log.model.replace('llama-3.1-', '')}
+                                            </span>
+                                        )}
                                         {log.keyUsed !== undefined && <span className="text-white/70">W0{log.keyUsed + 1}</span>}
                                         {log.error && <span className="text-[#FF453A] truncate flex-1">{log.error}</span>}
                                     </div>

@@ -1,11 +1,12 @@
-export const MODEL_8B = 'llama-3.1-8b-instant';
-export const MODEL_70B = 'llama-3.3-70b-versatile';
+export const MODEL_8B = 'openai/gpt-oss-20b';
+export const MODEL_70B = 'openai/gpt-oss-120b';
 export const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+export const MODELS_URL = 'https://api.groq.com/openai/v1/models';
 
-export const PRICE_8B_IN = 0.05 / 1e6;
-export const PRICE_8B_OUT = 0.10 / 1e6;
-export const PRICE_70B_IN = 0.59 / 1e6;
-export const PRICE_70B_OUT = 0.79 / 1e6;
+export const PRICE_8B_IN = 0.075 / 1e6;
+export const PRICE_8B_OUT = 0.30 / 1e6;
+export const PRICE_70B_IN = 0.15 / 1e6;
+export const PRICE_70B_OUT = 0.60 / 1e6;
 
 // Number of worker slots available
 export const MAX_WORKERS = 5;

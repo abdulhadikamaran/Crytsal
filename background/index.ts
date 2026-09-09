@@ -5,7 +5,7 @@
  * Updated: Requires user to provide their own API keys, 5 worker slots
  */
 
-import { API_URL, hasApiKeys, getActiveKeyCount } from '../services/worker-core/config';
+import { API_URL, MODELS_URL, hasApiKeys, getActiveKeyCount } from '../services/worker-core/config';
 import { ModelTier } from '../services/worker-core/types';
 import { SemanticRouter } from '../services/worker-core/SemanticRouter';
 import { correctText, isExhausted, getExhaustionEndTime, resetExhaustion } from '../services/worker-core/ApiClient';
@@ -114,17 +114,11 @@ async function runHealthCheck(): Promise<void> {
 async function validateApiKey(key: string): Promise<{ valid: boolean; error?: string }> {
   console.log('[Crystal] Validating API key...');
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
+    const res = await fetch(MODELS_URL, {
+      method: 'GET',
       headers: {
-        'Authorization': `Bearer ${key}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
-        messages: [{ role: 'user', content: 'test' }],
-        max_tokens: 1
-      })
+        'Authorization': `Bearer ${key}`
+      }
     });
 
     if (res.status === 401 || res.status === 403) {
