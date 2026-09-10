@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Crystal: AI Corrector",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "icons": {
     "16": "batman-logo-png_seeklogo-17070.png",
     "48": "batman-logo-png_seeklogo-17070.png",

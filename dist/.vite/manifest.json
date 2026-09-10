@@ -1,8 +1,8 @@
 {
-  "../../../../../../../@crx/manifest": {
-    "file": "assets/crx-manifest.js-RG6oubV0.js",
+  "../../../../../@crx/manifest": {
+    "file": "assets/crx-manifest.js-DeqV3G2j.js",
     "name": "crx-manifest.js",
-    "src": "../../../../../../../@crx/manifest",
+    "src": "../../../../../@crx/manifest",
     "isEntry": true
   },
   "background/index.ts": {
